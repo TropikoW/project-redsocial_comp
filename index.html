@@ -7,19 +7,20 @@
 </head>
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <div id="App"></div>
+    <div id="app"></div>
     <script>
-        const vm = Vue.createApp({
+        const app = Vue.createApp({
             data() {
                 return {
                     user : {
                         username : '',
+                        pdefault : 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg',
                         logged : false
                     },
                     text : 'Logged out',
                     posts : [{
-                        title : '',
-                        description : ''
+                        title : 'Post prueba',
+                        description : 'Descripcion prueba'
                     }]
                 }
             },
@@ -72,11 +73,30 @@
                     <div class="vuser">
                         <h2>{{text}}</h2>
                         <input type="text" v-model="user.username" v-if="!user.logged"/>
-                        <button @click="togglesesion" :class="togglebtn">{{label}}</button>
+                        <button @click="togglesesion" :class="togglebtn ">{{label}}</button>
+                        <div v-if="user.logged" class="container-prf">
+                            <figure>
+                                <img :src="user.pdefault" :width="100" :height="100">
+                            </figure>
+                            <h3>Hola! {{user.username}}</h3>
+                            <items v-for="(item,i) in posts" :key="i" :post="item"/>
+                        </div>
                     </div>
                 </div>
             `
-        }).mount('#App')
+        })
+        app.component("items",{
+            props:['post'],
+            template : `
+                <div >
+                    <div class="targetpost">
+                        <h3>{{post.title}}</h3>
+                        <p>{{post.description}}</p>
+                    </div>
+                </div>
+            `
+        })
+        const vm = app.mount('#app')
     </script>
     <style>
         *{
@@ -102,6 +122,29 @@
             align-items: center;
             width: 100%;
             height: 100vh;
+        }
+        .container-prf{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            right: 0;
+            background-color: #ffffff;
+            width: 50vh;
+            height: 100vh;
+        }
+        .container-prf>figure{
+            margin: 20px 0 10px 0;
+            margin: 30px;
+        }
+        .container-prf>figure>img{
+            border-radius: 50%;
+        }
+        .targetpost{
+            border: 1px solid #c0c0c0;
+            padding: 20px 50px;
+            border-radius: 10px;
+            box-shadow: 0 1px 0 rgba(9,30,66,.25);
         }
         h2{
             font-size: 35px;
